@@ -54,7 +54,7 @@ vim.opt.splitbelow = true
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 vim.opt.list = true
-vim.opt.listchars = { tab = '> ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = { trail = '·' }
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
@@ -63,19 +63,24 @@ vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
+vim.opt.scrolloff = 8
 vim.opt.tabstop = 4
-
--- [[ Basic Keymaps ]]
---  See `:help vim.keymap.set()`
 
 -- no search highlightin. dont like it.
 vim.opt.hlsearch = false
 
--- I simply need a netrw shortcut I am so sorry
-vim.keymap.set('n', '<leader>xf', ':Explore<CR>', { desc = 'E[X]plore [F]iles' })
-vim.keymap.set('n', '<leader>xp', ':Explore' .. vim.fn.getcwd() .. '<CR>', { desc = 'E[X]plore [P]roject' })
-vim.keymap.set('n', '<leader>xn', ':Explore' .. vim.fn.stdpath 'config' .. '<CR>', { desc = 'E[X]plore [N]eovim' })
+-- [[ Basic Keymaps ]]
+--  See `:help vim.keymap.set()`
+
+local function callbackExplore(dir)
+  return function()
+    vim.cmd { cmd = 'Explore', args = { dir } }
+  end
+end
+
+vim.keymap.set('n', '<leader>xf', callbackExplore(), { desc = 'E[X]plore [F]iles' })
+vim.keymap.set('n', '<leader>xp', callbackExplore(vim.fn.getcwd()), { desc = 'E[X]plore [P]roject' })
+vim.keymap.set('n', '<leader>xn', callbackExplore(vim.fn.stdpath 'config'), { desc = 'E[X]plore [N]eovim' })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
